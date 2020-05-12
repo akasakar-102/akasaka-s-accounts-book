@@ -10,13 +10,6 @@ function targetDateMaker() {
   return today;
 }
 
-function dateFormat(date, format) {
-    format = format.replace(/YYYY/, date.getFullYear());
-    format = format.replace(/MM/, date.getMonth() + 1);
-    format = format.replace(/DD/, date.getDate());
-    return format;
-}
-
 function fetchFile(afterDate, beforeDate, SEARCH_TERM){
   const threads = GmailApp.search(SEARCH_TERM, 0, 10);
   const messages = GmailApp.getMessagesForThreads(threads);
