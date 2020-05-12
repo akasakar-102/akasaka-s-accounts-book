@@ -2,11 +2,11 @@ var spreadSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('data');
 var usingColumn = 9;
 
 function onOpen() {
-  var ui = SpreadsheetApp.getUi();           // Uiクラスを取得する
-  var menu = ui.createMenu('家計簿ツール');  // Uiクラスからメニューを作成する
-  menu.addItem('月を指定してcsv取込', 'monthSelect');   // メニューにアイテムを追加する
-  menu.addItem('最新月のcsv取込', 'autoImport');   // メニューにアイテムを追加する
-  menu.addToUi();                            // メニューをUiクラスに追加する
+  var ui = SpreadsheetApp.getUi();
+  var menu = ui.createMenu('家計簿ツール');
+  menu.addItem('月を指定してcsv取込', 'monthSelect');
+  menu.addItem('最新月のcsv取込', 'autoImport');
+  menu.addToUi();
 }
 
 //月指定ダイアログ
