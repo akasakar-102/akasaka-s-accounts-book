@@ -1,7 +1,7 @@
 function mailScraping(){
   var afterDate = targetDateMaker();
   const SEARCH_TERM = 'subject:([おカネレコ]エクスポート) after:' + afterDate + ' has:attachment';
-  fetchFile(afterDate, beforeDate, SEARCH_TERM);
+  fetchFile(SEARCH_TERM);
 }
 
 function targetDateMaker() {
@@ -10,7 +10,7 @@ function targetDateMaker() {
   return today;
 }
 
-function fetchFile(afterDate, beforeDate, SEARCH_TERM){
+function fetchFile(SEARCH_TERM){
   const threads = GmailApp.search(SEARCH_TERM, 0, 10);
   const messages = GmailApp.getMessagesForThreads(threads);
   for(const thread of messages){
