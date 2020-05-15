@@ -2,6 +2,7 @@ var budgetSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('予算�
 var usingColumn = 3;
 var usingRows = 6;
 
+//ローカル変数作成
 function init() {
   var maxCol = budgetSheet.getRange(budgetSheet.getMaxRows(), 1).getNextDataCell(SpreadsheetApp.Direction.UP);
   this.lastCol = maxCol.getRow();
@@ -9,15 +10,18 @@ function init() {
   this.nowMonth = getLatestYyMm();
 }
 
+//main
 function makeBudget(){
   init();
   copyLastToLatest();
 }
 
+//当月yyyyMM作成
 function getLatestYyMm() {
   return Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyyMM');
 }
 
+//先月予算をコピーして当月分とする
 function copyLastToLatest() {
   var orgStartRow = this.lastCol - usingRows + 1;
   var tgtStartRow = this.lastCol + 1 ;

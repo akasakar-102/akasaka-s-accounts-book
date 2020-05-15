@@ -1,6 +1,7 @@
 var spreadSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('data');
 var usingColumn = 9;
 
+//実行ボタン作成
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
   var menu = ui.createMenu('家計簿ツール');
@@ -42,7 +43,7 @@ function getLatestMonthFromDrive() {
   return latestMonth.toString(10);
 }
 
-//インポートロジック本体
+//main
 function doImport(yearMonth) {
   var startRow = 2;
   var lastRow = spreadSheet.getLastRow();
