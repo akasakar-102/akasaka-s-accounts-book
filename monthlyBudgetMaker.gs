@@ -1,6 +1,6 @@
 var budgetSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('予算シート');
-var usingColumn = 3;
-var usingRows = 6;
+var budgetUsingColumn = 3;
+var budgetUsingRows = 6;
 
 //ローカル変数作成
 function init() {
@@ -23,13 +23,13 @@ function getLatestYyMm() {
 
 //先月予算をコピーして当月分とする
 function copyLastToLatest() {
-  var orgStartRow = this.lastCol - usingRows + 1;
+  var orgStartRow = this.lastCol - budgetUsingRows + 1;
   var tgtStartRow = this.lastCol + 1 ;
   
-  var initRange = budgetSheet.getRange(tgtStartRow, 1, usingRows, 1);
+  var initRange = budgetSheet.getRange(tgtStartRow, 1, budgetUsingRows, 1);
   initRange.setValue(this.nowMonth);
   
-  var orgRange = budgetSheet.getRange(orgStartRow, 2, usingRows, usingColumn);
-  var targetRange = budgetSheet.getRange(tgtStartRow, 2, usingRows, usingColumn);
+  var orgRange = budgetSheet.getRange(orgStartRow, 2, budgetUsingRows, budgetUsingColumn);
+  var targetRange = budgetSheet.getRange(tgtStartRow, 2, budgetUsingRows, budgetUsingColumn);
   orgRange.copyTo(targetRange);
 }

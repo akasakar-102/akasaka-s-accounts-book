@@ -1,5 +1,5 @@
 var spreadSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('data');
-var usingColumn = 9;
+var importerUsingColumn = 9;
 
 //実行ボタン作成
 function onOpen() {
@@ -74,7 +74,7 @@ function doImport(yearMonth) {
 function getManualData(startRow, lastRow) {
   var mResult = [];
   var importFlgIndex = 8;
-  var rec = spreadSheet.getRange(startRow, 1, lastRow, usingColumn).getValues();
+  var rec = spreadSheet.getRange(startRow, 1, lastRow, importerUsingColumn).getValues();
   for(i=0; i < rec.length; i++){
     if(rec[i][importFlgIndex] != 1){
       mResult.push(rec[i]);
@@ -171,8 +171,9 @@ function makeMemo(memo){
 
 //csv成形データと手入力データを結合
 function mergeData(orgData, manualInputData){
+  var mergedResult = orgData;
   for(i =0; i < manualInputData.length; i++){
-    orgData.push(manualInputData[i]);
+    mergedResult.push(manualInputData[i]);
   }
-  return orgData;
+  return mergedResult;
 }
