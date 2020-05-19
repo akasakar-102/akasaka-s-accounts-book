@@ -1,6 +1,6 @@
 var budgetSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('予算シート');
-var budgetUsingColumn = 3;
-var budgetUsingRows = 6;
+const budgetUsingColumn = 3;
+const budgetUsingRows = 6;
 
 //ローカル変数作成
 function init() {

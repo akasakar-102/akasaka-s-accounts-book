@@ -22,6 +22,7 @@ function fetchFile(SEARCH_TERM){
       for(const attachment of attachments){
         var attachName = (attachment.getName()).split(/[_.]/);
         if(attachName.length == 4 && attachName[0] == "Export" && attachName[3] == "csv"){
+          console.log("Find a new mail! - " + attachment.getName());
           addToFolder(attachment);
         }
       }

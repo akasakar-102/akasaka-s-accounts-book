@@ -1,9 +1,9 @@
-var spreadSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('data');
-var importerUsingColumn = 9;
+var dataSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('data');
+const importerUsingColumn = 9;
 
 //実行ボタン作成
 function onOpen() {
-  var ui = SpreadsheetApp.getUi();
+  var ui = dataSheetApp.getUi();
   var menu = ui.createMenu('家計簿ツール');
   menu.addItem('月を指定してcsv取込', 'monthSelect');
   menu.addItem('最新月のcsv取込', 'autoImport');
@@ -12,7 +12,7 @@ function onOpen() {
 
 //月指定ダイアログ
 function monthSelect(){
-  var ui = SpreadsheetApp.getUi();
+  var ui = dataSheetApp.getUi();
   var message = '対象月を選択してください'
   var res = Browser.inputBox(message);
   doImport(res);
@@ -46,7 +46,7 @@ function getLatestMonthFromDrive() {
 //main
 function doImport(yearMonth) {
   var startRow = 2;
-  var lastRow = spreadSheet.getLastRow();
+  var lastRow = dataSheet.getLastRow();
   var targetYear ="" + Math.floor(yearMonth / 100);
   var targetMonth =("0" + yearMonth % 100).slice(-2);
   var csvName = "Export_" + targetYear + "_" + targetMonth + ".csv";
@@ -63,9 +63,9 @@ function doImport(yearMonth) {
     var importData = mergeData(orgCsv, manualInputData);
 
     //白紙化（Todo:書き足し対応）
-    spreadSheet.getRange(startRow, 1, lastRow, importData[0].length).clear();
+    dataSheet.getRange(startRow, 1, lastRow, importData[0].length).clear();
 
-    spreadSheet.getRange(startRow,1,importData.length,importData[0].length).setValues(importData).sort([{column:2,ascending:true}]);
+    dataSheet.getRange(startRow,1,importData.length,importData[0].length).setValues(importData).sort([{column:2,ascending:true}]);
     return;
   }
 }
@@ -74,7 +74,7 @@ function doImport(yearMonth) {
 function getManualData(startRow, lastRow) {
   var mResult = [];
   var importFlgIndex = 8;
-  var rec = spreadSheet.getRange(startRow, 1, lastRow, importerUsingColumn).getValues();
+  var rec = dataSheet.getRange(startRow, 1, lastRow, importerUsingColumn).getValues();
   for(i=0; i < rec.length; i++){
     if(rec[i][importFlgIndex] != 1){
       mResult.push(rec[i]);
@@ -150,8 +150,6 @@ function makeMonth(date){
 function makeDate(date){
   var month = date.split('/')[1];
   var day = date.split('/')[2];
-  console.log(month);
-  console.log(day);
   return month + "/" + day;
 }  
   
