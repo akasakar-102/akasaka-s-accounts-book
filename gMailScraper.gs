@@ -26,10 +26,12 @@ function fetchFile(SEARCH_TERM){
           addToFolder(attachment);
           console.log("AutoImport start with - " + attachName[1] + attachName[2]);
           doImport("" + attachName[1] + attachName[2]);
+          return;
         }
       }
     }
   }
+  console.log("There is no new mail!");
 }
 
 //Drive内に同名ファイルが存在したら Del&Ins
