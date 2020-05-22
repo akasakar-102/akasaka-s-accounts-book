@@ -22,8 +22,10 @@ function fetchFile(SEARCH_TERM){
       for(const attachment of attachments){
         var attachName = (attachment.getName()).split(/[_.]/);
         if(attachName.length == 4 && attachName[0] == "Export" && attachName[3] == "csv"){
-          console.log("Find a new mail! - " + attachment.getName());
+          console.log("Find a new mail! \n From    : " + message.getFrom() + "\n Date    : " + message.getDate() + "\n FileName: " + attachment.getName());
           addToFolder(attachment);
+          console.log("AutoImport start with - " + attachName[1] + attachName[2]);
+          doImport("" + attachName[1] + attachName[2]);
         }
       }
     }

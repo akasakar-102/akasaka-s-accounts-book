@@ -3,7 +3,7 @@ const importerUsingColumn = 9;
 
 //実行ボタン作成
 function onOpen() {
-  var ui = dataSheetApp.getUi();
+  var ui = SpreadsheetApp.getUi();
   var menu = ui.createMenu('家計簿ツール');
   menu.addItem('月を指定してcsv取込', 'monthSelect');
   menu.addItem('最新月のcsv取込', 'autoImport');
