@@ -12,7 +12,7 @@ function onOpen() {
 
 //月指定ダイアログ
 function monthSelect(){
-  var ui = dataSheetApp.getUi();
+  var ui = SpreadsheetApp.getUi();
   var message = '対象月を選択してください'
   var res = Browser.inputBox(message);
   doImport(res);
@@ -46,7 +46,8 @@ function getLatestMonthFromDrive() {
 //main
 function doImport(yearMonth) {
   var startRow = 2;
-  var lastRow = dataSheet.getLastRow();
+  startRow = getLatestStrRow(yearMonth);
+  var lastRow = getLatestEndRow(yearMonth, startRow);
   var targetYear ="" + Math.floor(yearMonth / 100);
   var targetMonth =("0" + yearMonth % 100).slice(-2);
   var csvName = "Export_" + targetYear + "_" + targetMonth + ".csv";
@@ -57,17 +58,58 @@ function doImport(yearMonth) {
   if (file.hasNext()){  
     var csvText = file.next().getBlob().getDataAsString("UTF-8"); 
     var csv = Utilities.parseCsv(csvText);
+    //既存データがある場合に行数を取得、ない場合には0
+    var useRows = lastRow - startRow + 1;
     //手入力されたデータは逃がして最後にマージ
-    var manualInputData = getManualData(startRow, lastRow);
-    var orgCsv = organizeCsv(csv);
+    var manualInputData = getManualData(startRow, useRows);
+    var orgCsv = organizeCsv(csv, yearMonth);
     var importData = mergeData(orgCsv, manualInputData);
+    if (useRows < importData.length && useRows != 0) {
+      dataSheet.insertRowsBefore(lastRow, importData.length - useRows)
+    }
 
-    //白紙化（Todo:書き足し対応）
+    //対象月データがすでにあればクリア
     dataSheet.getRange(startRow, 1, lastRow, importData[0].length).clear();
 
     dataSheet.getRange(startRow,1,importData.length,importData[0].length).setValues(importData).sort([{column:2,ascending:true}]);
     return;
   }
+}
+
+//対象月の最初の行取得
+function getLatestStrRow(yearMonth) {
+  var latestStr = dataSheet.getLastRow()+1;
+  for (i=2; i < dataSheet.getLastRow(); i++) {
+    if (dataSheet.getRange(i, 1, 1, 1).getValues()[0][0] == yearMonth) {
+      latestStr = i;
+      break;
+    }
+    else if (dataSheet.getRange(i, 1, 1, 1).getValues()[0][0] == "") {
+      latestStr = i;
+      break;
+    }
+  }
+  return latestStr;
+}
+
+//対象月の最後の行取得
+function getLatestEndRow(yearMonth, startRow) {
+  var latestEnd = dataSheet.getLastRow();
+  if (startRow > latestEnd){
+    return startRow;
+  }
+  if (dataSheet.getRange(startRow, 1, 1, 1).getValues()[0][0] == "") {
+    return latestEnd;
+  }
+  for (i=startRow; i <= dataSheet.getLastRow(); i++){
+    if (dataSheet.getRange(i, 1, 1, 1).getValues()[0][0] == yearMonth) {
+      latestEnd = i;
+    }
+    else {
+      return latestEnd;
+    }
+  }
+  return latestEnd;
 }
 
 //対象月に手入力データがある場合に取得してマージ
@@ -84,7 +126,7 @@ function getManualData(startRow, lastRow) {
 }
 
 //元csvデータをgss表示用に再構築
-function organizeCsv(csv){
+function organizeCsv(csv, yearMonth){
   var dateColumnIndex = 0, categoryColumnIndex = 0, priceColumnIndex = 0, memoColumnIndex = 0, shopNameColumnIndex = 0;
   var date, category, price, memo, shopName, resultMonth, resultDate;
   var resultOneRecord = [];
@@ -127,7 +169,7 @@ function organizeCsv(csv){
     price = splitData[priceColumnIndex];
     memo = splitData[memoColumnIndex];
     shopName = splitData[shopNameColumnIndex];
-    var resultMonth = makeMonth(date);
+    var resultMonth = yearMonth;
     var resultDate = makeDate(date);
     var resultItem = makeItem(memo);
     var resultMemo = makeMemo(memo);
@@ -138,13 +180,6 @@ function organizeCsv(csv){
   }
   return result;
 }
-  
-//csvのdateからyyyymm作成
-function makeMonth(date){
-  var year = date.split('/')[0];
-  var month = date.split('/')[1];
-  return year + month;
-}    
 
 //csvのdateからmm/dd作成
 function makeDate(date){
